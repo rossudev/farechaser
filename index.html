@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <title>Fare Chaser</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="title" content="Fare Chaser Game" />
+	<meta name="description" content="Run a transportation business. A simple browser game that uses Google Maps." />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH3HjD-8oLQlmJwJ61hNc7NzCTrl94QT4&libraries=places"></script>
+	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" type="image/png" href="favicon.png">
+	<link rel="manifest" href="manifest.json">
+  </head>
+
+  <body>
+  <form method="POST" action="ride.php" target="_self" enctype="multipart/form-data">
+  <input type="hidden" name="location1" id="location1" value="34.0453" />
+  <input type="hidden" name="location2" id="location2" value="-118.2525" />
+	  <script>
+		  "use strict";
+
+		  let map;
+		  let gmarkers = [];
+
+		  function initMap() {
+			  map = new google.maps.Map(document.getElementById("map"), {
+				  center: {
+					  lat: 34.0453,
+					  lng: -118.2525
+				  },
+				  zoom: 13,
+			  });
+
+			  initMarker();
+			  initAutocomplete();
+		  }
+
+		  var currentInfoWindow = null;
+
+		  function geocodeLatLng(geocoder, map, infowindow, inputt1, inputt2, mrkobj) {
+			  const latlng = {
+				  lat: inputt1,
+				  lng: inputt2,
+			  };
+			  geocoder.geocode({ location: latlng }, (results, status) => {
+				  if (status === "OK") {
+					  if (results[0]) {
+						  infowindow.setContent(results[0].formatted_address);
+
+						  if (currentInfoWindow != null) {
+							  currentInfoWindow.close();
+						  }
+
+						  infowindow.open(map, mrkobj);
+						  currentInfoWindow = infowindow;
+
+					  } else {
+						  window.alert("No results found");
+					  }
+				  } else {
+					  window.alert("Geocoder failed due to: " + status);
+				  }
+			  });
+		  }
+
+		  function markerGo(markerobj) {
+			  gmarkers.push(markerobj);
+
+			  let input1 = markerobj.getPosition().lat();
+			  let input2 = markerobj.getPosition().lng();
+			  document.getElementById("location1").value = input1;
+			  document.getElementById("location2").value = input2;
+			  const geocoder = new google.maps.Geocoder();
+			  const infowindow = new google.maps.InfoWindow();
+			  geocodeLatLng(geocoder, map, infowindow, input1, input2, markerobj);
+		  }
+
+		  function initMarker() {
+			  var locc = new google.maps.LatLng(34.04539, -118.2525);
+			  const marker = new google.maps.Marker({
+				  position: locc,
+				  icon: 'car.png',
+				  map: map,
+				  draggable:true,
+				  title:"Drag to Starting Position"
+			  });
+
+			  markerGo(marker);
+			  google.maps.event.addListener(marker, 'dragend', function(evt){markerGo(marker);});
+		  }
+
+		  function setMapOnAll(map) {
+			  for (let i = 0; i < gmarkers.length; i++) {
+				  gmarkers[i].setMap(map);
+			  }
+		  }
+
+		  function deleteMarkers() {
+			  setMapOnAll(null);
+			  gmarkers = [];
+		  }
+
+		  function newMarker (latlng) {
+			  deleteMarkers()
+
+			  const markerNew = new google.maps.Marker({
+				  position: latlng,
+				  icon: 'car.png',
+				  map: map,
+				  draggable:true,
+				  title:"Drag to Starting Position"
+			  });
+
+			  markerGo(markerNew);
+			  google.maps.event.addListener(markerNew, 'dragend', function(evt){markerGo(markerNew);});
+		  }
+
+		  var coords = {
+			  'PHI': '39.9867,-75.1129',
+			  'NYC': '40.7242,-73.9961',
+			  'DC': '38.8946,-77.0218',
+			  'BOS': '42.3580,-71.0636',
+			  'LA': '34.0453,-118.2525',
+			  'SF': '37.7564,-122.4245',
+			  'CHI': '41.8699,-87.6363',
+			  'HON': '21.307,-157.858',
+			  'MOS': '55.7516,37.6177',
+			  'LON': '51.4991,-0.1247',
+			  'PAR': '48.8583,2.2945',
+			  'BER': '52.5163,13.3772',
+			  'BEI': '39.9033,116.3916',
+			  'DEL': '28.6138,77.2088',
+			  'ISL': '33.7166,73.0666',
+			  'TEH': '35.6961,51.4230',
+			  'TEL': '32.06292,34.7757'
+		  };
+
+		  var days = {
+			  'Sunday': 'Worshipers,<br/>Errand Runners,<br/>Events',
+			  'Monday': 'Commuters,<br/>Travelers,<br/>Errand Runners',
+			  'Tuesday': 'Commuters,<br/>Travelers,<br/>Events',
+			  'Wednesday': 'Worshipers,<br/>Revelers,<br/>Commuters',
+			  'Thursday': 'Commuters,<br/>Errand Runners,<br/>Events',
+			  'Friday': 'Travelers,<br/>Revelers,<br/>Events',
+			  'Saturday': 'Worshipers,<br/>Revelers,<br/>Travelers'
+		  };
+
+		  var timesBusy = {
+			  '00:00': 'Heavy,Heavy,Balanced',
+			  '00:15': 'Heavy,Heavy,Balanced',
+			  '00:30': 'Heavy,Heavy,Balanced',
+			  '00:45': 'Heavy,Moderate,Too Many Drivers',
+			  '01:00': 'Heavy,Moderate,Too Many Drivers',
+			  '01:15': 'Heavy,Moderate,Too Many Drivers',
+			  '01:30': 'Moderate,Moderate,Balanced',
+			  '01:45': 'Moderate,Moderate,Balanced',
+			  '02:00': 'Light,Moderate,Surging',
+			  '02:15': 'Light,Moderate,Surging',
+			  '02:30': 'Light,Moderate,Surging',
+			  '02:45': 'Light,Moderate,Surging',
+			  '03:00': 'Light,Moderate,Surging',
+			  '03:15': 'Light,Light,Balanced',
+			  '03:30': 'Light,Light,Balanced',
+			  '03:45': 'Light,Light,Balanced',
+			  '04:00': 'Light,Light,Balanced',
+			  '04:15': 'Light,Moderate,Surging',
+			  '04:30': 'Light,Moderate,Surging',
+			  '04:45': 'Moderate,Moderate,Balanced',
+			  '05:00': 'Moderate,Moderate,Balanced',
+			  '05:15': 'Moderate,Moderate,Balanced',
+			  '05:30': 'Moderate,Moderate,Balanced',
+			  '05:45': 'Light,Heavy,Heavy Surging',
+			  '06:00': 'Light,Moderate,Surging',
+			  '06:15': 'Moderate,Moderate,Balanced',
+			  '06:30': 'Moderate,Moderate,Balanced',
+			  '06:45': 'Moderate,Heavy,Surging',
+			  '07:00': 'Moderate,Moderate,Balanced',
+			  '07:15': 'Moderate,Moderate,Balanced',
+			  '07:30': 'Light,Moderate,Surging',
+			  '07:45': 'Light,Heavy,Heavy Surging',
+			  '08:00': 'Light,Moderate,Surging',
+			  '08:15': 'Moderate,Moderate,Balanced',
+			  '08:30': 'Moderate,Moderate,Balanced',
+			  '08:45': 'Moderate,Moderate,Balanced',
+			  '09:00': 'Moderate,Moderate,Balanced',
+			  '09:15': 'Heavy,Moderate,Too Many Drivers',
+			  '09:30': 'Heavy,Moderate,Too Many Drivers',
+			  '09:45': 'Heavy,Moderate,Too Many Drivers',
+			  '10:00': 'Heavy,Moderate,Too Many Drivers',
+			  '10:15': 'Heavy,Moderate,Too Many Drivers',
+			  '10:30': 'Heavy,Moderate,Too Many Drivers',
+			  '10:45': 'Heavy,Light,Way Too Many Drivers',
+			  '11:00': 'Moderate,Light,Too Many Drivers',
+			  '11:15': 'Moderate,Moderate,Balanced',
+			  '11:30': 'Light,Heavy,Heavy Surging',
+			  '11:45': 'Moderate,Heavy,Surging',
+			  '12:00': 'Moderate,Moderate,Balanced',
+			  '12:15': 'Moderate,Light,Too Many Drivers',
+			  '12:30': 'Moderate,Light,Too Many Drivers',
+			  '12:45': 'Moderate,Moderate,Balanced',
+			  '13:00': 'Moderate,Heavy,Surging',
+			  '13:15': 'Moderate,Moderate,Balanced',
+			  '13:30': 'Moderate,Moderate,Balanced',
+			  '13:45': 'Heavy,Heavy,Balanced',
+			  '14:00': 'Heavy,Heavy,Balanced',
+			  '14:15': 'Heavy,Moderate,Too Many Drivers',
+			  '14:30': 'Heavy,Moderate,Too Many Drivers',
+			  '14:45': 'Heavy,Moderate,Too Many Drivers',
+			  '15:00': 'Heavy,Moderate,Too Many Drivers',
+			  '15:15': 'Heavy,Heavy,Balanced',
+			  '15:30': 'Heavy,Heavy,Balanced',
+			  '15:45': 'Heavy,Moderate,Too Many Drivers',
+			  '16:00': 'Heavy,Moderate,Too Many Drivers',
+			  '16:15': 'Heavy,Heavy,Balanced',
+			  '16:30': 'Heavy,Heavy,Balanced',
+			  '16:45': 'Heavy,Heavy,Balanced',
+			  '17:00': 'Heavy,Heavy,Balanced',
+			  '17:15': 'Heavy,Heavy,Balanced',
+			  '17:30': 'Heavy,Heavy,Balanced',
+			  '17:45': 'Heavy,Heavy,Balanced',
+			  '18:00': 'Heavy,Heavy,Balanced',
+			  '18:15': 'Heavy,Moderate,Too Many Drivers',
+			  '18:30': 'Moderate,Moderate,Balanced',
+			  '18:45': 'Heavy,Moderate,Too Many Drivers',
+			  '19:00': 'Moderate,Heavy,Surging',
+			  '19:15': 'Heavy,Moderate,Too Many Drivers',
+			  '19:30': 'Heavy,Moderate,Too Many Drivers',
+			  '19:45': 'Heavy,Moderate,Too Many Drivers',
+			  '20:00': 'Heavy,Moderate,Too Many Drivers',
+			  '20:15': 'Moderate,Heavy,Surging',
+			  '20:30': 'Heavy,Moderate,Too Many Drivers',
+			  '20:45': 'Heavy,Light,Way Too Many Drivers',
+			  '21:00': 'Heavy,Light,Way Too Many Drivers',
+			  '21:15': 'Heavy,Moderate,Too Many Drivers',
+			  '21:30': 'Heavy,Light,Way Too Many Drivers',
+			  '21:45': 'Moderate,Light,Too Many Drivers',
+			  '22:00': 'Heavy,Moderate,Too Many Drivers',
+			  '22:15': 'Heavy,Moderate,Too Many Drivers',
+			  '22:30': 'Heavy,Light,Way Too Many Drivers',
+			  '22:45': 'Heavy,Moderate,Too Many Drivers',
+			  '23:00': 'Heavy,Heavy,Balanced',
+			  '23:15': 'Heavy,Moderate,Too Many Drivers',
+			  '23:30': 'Heavy,Moderate,Too Many Drivers',
+			  '23:45': 'Heavy,Heavy,Balanced'
+		  };
+
+		  function changeMap(city) {
+			  let c = coords[city].split(',');
+			  let latlng = new google.maps.LatLng(c[0], c[1]);
+			  map.setCenter(latlng);
+			  map.setZoom(13);
+
+			  newMarker(latlng);
+		  }
+
+		  function changeTime(timex) {
+			  let xx = timesBusy[timex].split(',');
+			  document.getElementById("x1").innerHTML = xx[0];
+			  document.getElementById("x2").innerHTML = xx[1];
+			  document.getElementById("x3").innerHTML = xx[2];
+		  }
+
+		  function changeDay(dayx) {
+			  document.getElementById("yy").innerHTML = days[dayx];
+		  }
+
+		  function initAutocomplete() {
+			  const input = document.getElementById("locat");
+			  const searchBox = new google.maps.places.SearchBox(input);
+
+			  map.addListener("bounds_changed", () => {
+				  searchBox.setBounds(map.getBounds());
+			  });
+
+			  searchBox.addListener("places_changed", () => {
+				  const places = searchBox.getPlaces();
+
+				  if (places.length == 0) {
+					  return;
+				  }
+
+				  const bounds = new google.maps.LatLngBounds();
+				  places.forEach((place) => {
+					  if (!place.geometry) {
+						  console.log("Returned place contains no geometry");
+						  return;
+					  }
+
+					  deleteMarkers()
+
+					  const markerNew = new google.maps.Marker({
+						  position: place.geometry.location,
+						  icon: 'car.png',
+						  map: map,
+						  draggable:true,
+						  title:"Drag to Starting Position"
+					  });
+
+					  markerGo(markerNew);
+					  google.maps.event.addListener(markerNew, 'dragend', function(evt){markerGo(markerNew);});
+
+					  if (place.geometry.viewport) {
+						  bounds.union(place.geometry.viewport);
+					  } else {
+						  bounds.extend(place.geometry.location);
+					  }
+				  });
+				  map.fitBounds(bounds);
+			  });
+		  }
+	  </script>
+    <div id="map"></div>
+	
+	<div id="theSettings">
+		<div id="topFrame">
+			<h1>FARE CHASER</h1><h2><a href="mailto:farechaser@gmail.com">Feedback</a></h2>
+		</div>
+		<div id="bottomFrame">
+			<div id="locate">
+				<span><b>1. Drag</b> the car to wherever you'd like start your shift.</span><br/><br/>
+				<div id="location_preset">
+					<select id="myCity" name="myCity" onchange="changeMap(this.value)">
+						<option value="LA">Los Angeles, CA, USA</option>
+						<option value="BEI">Beijing, China</option>
+						<option value="BER">Berlin, Germany</option>
+						<option value="BOS">Boston, MA, USA</option>
+						<option value="CHI">Chicago, IL, USA</option>
+						<option value="HON">Honolulu, HI, USA</option>
+						<option value="ISL">Islamabad, Pakistan</option>
+						<option value="MOS">Moscow, Russia</option>
+						<option value="DEL">New Delhi, India</option>
+						<option value="LON">London, England</option>
+						<option value="NYC">New York, NY, USA</option>
+						<option value="PAR">Paris, France</option>
+						<option value="PHI">Philadelphia, PA, USA</option>
+						<option value="SF">San Francisco, CA, USA</option>
+						<option value="TEH">Tehran, Iran</option>
+						<option value="TEL">Tel Aviv, Israel</option>
+						<option value="DC">Washington, DC, USA</option>
+					</select><br/><br/>
+				</div>
+				<div id="city_input">
+					<small><i><span><label for="locat">Enter a starting location </label></span></i></small><input type="text" id="locat" placeholder="Enter a location"><br/>
+				</div>
+			</div>
+			<hr id="city_hr" style="margin-top:5px;margin-bottom:5px;"/>
+			<div id="time">
+				<span><b>2. Choose</b> a starting time for your shift. You will be allowed to drive for six hours.</span><br/><br/>
+				<div id="time_preset">
+					<div>
+						<select id="myDay" name="myDay" onchange="changeDay(this.value)">
+							<option value="Sunday">Sunday</option>
+							<option value="Monday">Monday</option>
+							<option value="Tuesday">Tuesday</option>
+							<option value="Wednesday">Wednesday</option>
+							<option value="Thursday">Thursday</option>
+							<option value="Friday">Friday</option>
+							<option value="Saturday">Saturday</option>
+						</select>
+						<select id="myTime" name="myTime" onchange="changeTime(this.value)" style="float:right;">
+							<option value="00:00">00:00</option>
+							<option value="00:15">00:15</option>
+							<option value="00:30">00:30</option>
+							<option value="00:45">00:45</option>
+							<option value="01:00">01:00</option>
+							<option value="01:15">01:15</option>
+							<option value="01:30">01:30</option>
+							<option value="01:45">01:45</option>
+							<option value="02:00">02:00</option>
+							<option value="02:15">02:15</option>
+							<option value="02:30">02:30</option>
+							<option value="02:45">02:45</option>
+							<option value="03:00">03:00</option>
+							<option value="03:15">03:15</option>
+							<option value="03:30">03:30</option>
+							<option value="03:45">03:45</option>
+							<option value="04:00">04:00</option>
+							<option value="04:15">04:15</option>
+							<option value="04:30">04:30</option>
+							<option value="04:45">04:45</option>
+							<option value="05:00">05:00</option>
+							<option value="05:15">05:15</option>
+							<option value="05:30">05:30</option>
+							<option value="05:45">05:45</option>
+							<option value="06:00">06:00</option>
+							<option value="06:15">06:15</option>
+							<option value="06:30">06:30</option>
+							<option value="06:45">06:45</option>
+							<option value="07:00">07:00</option>
+							<option value="07:15">07:15</option>
+							<option value="07:30">07:30</option>
+							<option value="07:45">07:45</option>
+							<option value="08:00">08:00</option>
+							<option value="08:15">08:15</option>
+							<option value="08:30">08:30</option>
+							<option value="08:45">08:45</option>
+							<option value="09:00">09:00</option>
+							<option value="09:15">09:15</option>
+							<option value="09:30">09:30</option>
+							<option value="09:45">09:45</option>
+							<option value="10:00">10:00</option>
+							<option value="10:15">10:15</option>
+							<option value="10:30">10:30</option>
+							<option value="10:45">10:45</option>
+							<option value="11:00">11:00</option>
+							<option value="11:15">11:15</option>
+							<option value="11:30">11:30</option>
+							<option value="11:45">11:45</option>
+							<option value="12:00">12:00</option>
+							<option value="12:15">12:15</option>
+							<option value="12:30">12:30</option>
+							<option value="12:45">12:45</option>
+							<option value="13:00">13:00</option>
+							<option value="13:15">13:15</option>
+							<option value="13:30">13:30</option>
+							<option value="13:45">13:45</option>
+							<option value="14:00">14:00</option>
+							<option value="14:15">14:15</option>
+							<option value="14:30">14:30</option>
+							<option value="14:45">14:45</option>
+							<option value="15:00">15:00</option>
+							<option value="15:15">15:15</option>
+							<option value="15:30">15:30</option>
+							<option value="15:45">15:45</option>
+							<option value="16:00">16:00</option>
+							<option value="16:15">16:15</option>
+							<option value="16:30">16:30</option>
+							<option value="16:45">16:45</option>
+							<option value="17:00">17:00</option>
+							<option value="17:15">17:15</option>
+							<option value="17:30">17:30</option>
+							<option value="17:45">17:45</option>
+							<option value="18:00">18:00</option>
+							<option value="18:15">18:15</option>
+							<option value="18:30">18:30</option>
+							<option value="18:45">18:45</option>
+							<option value="19:00">19:00</option>
+							<option value="19:15">19:15</option>
+							<option value="19:30">19:30</option>
+							<option value="19:45">19:45</option>
+							<option value="20:00">20:00</option>
+							<option value="20:15">20:15</option>
+							<option value="20:30">20:30</option>
+							<option value="20:45">20:45</option>
+							<option value="21:00">21:00</option>
+							<option value="21:15">21:15</option>
+							<option value="21:30">21:30</option>
+							<option value="21:45">21:45</option>
+							<option value="22:00">22:00</option>
+							<option value="22:15">22:15</option>
+							<option value="22:30">22:30</option>
+							<option value="22:45">22:45</option>
+							<option value="23:00">23:00</option>
+							<option value="23:15">23:15</option>
+							<option value="23:30">23:30</option>
+							<option value="23:45">23:45</option>
+						</select>
+					</div><br/>
+					<div style="float:left; margin:0 auto 5px 0; border: 2px dotted #000; padding:2px;">
+						<table style=\"margin:0 auto 5px auto; border: 2px dotted #000; padding:10px; line-height: 150%;\" class="paxtable"><tr><td><b>Today's Passengers</b></td></tr><tr><td id="yy">Worshipers,<br/>Revelers,<br/>Errand Runners</td></tr></table>
+					</div>
+					<table style="width:auto; margin-right:0;float:right;font-size:70%; border: 2px dotted #000; padding:1px;">
+						<tr>
+							<td colspan="2" style="text-align:center;font-size:120%;"><b>Selected Time</b></td>
+						</tr>
+						<tr>
+							<td><b>Driver Supply</b></td>
+							<td id="x1" style="text-align:right;">Heavy</td>
+						</tr>
+						<tr>
+							<td><b>Passenger Demand</b></td>
+							<td id="x2" style="text-align:right;">Heavy</td>
+						</tr>
+						<tr>
+							<td><b>Status</b></td>
+							<td id="x3" style="text-align:right;">Balanced</td>
+						</tr>
+					</table>
+					<br/><br/><br/>
+				</div>
+			</div>
+			<br/><br/>
+			<hr id="time_hr" style="margin-top:15px;margin-bottom:5px;"/>
+			<input type="hidden" name="skiptime" id="skiptime" value="0" />
+			<input type="submit" value="Start Shift" class="optionblock accept" />
+			</form>
+			<br/>
+			<form method="POST" action="leaders.php" target="_self">
+				<input type="submit" class="optionblock goonline" value="Leaderboard" />
+			</form>
+			<hr id="time_hr" style="margin-top:15px;margin-bottom:5px;"/>
+			<div class="message"><div style=\"margin:15px;\"><p class="textmobile"><i>Mobile users may prefer to play Fare Chaser in Landscape Orientation</i></p><p><b>Known bug:</b> Getting an "Oops..." error message just means that the game wasn't able to locate a new place to go to.</p><p>Urban centers and suburbs are the best locations for driving. Very rural locations or natural boundaries can be problematic for the matching algorithm.</p></div></div>
+			<div class="message"><div style=\"margin:15px;\"><p style="text-align:center"><a href="privacy.html"><b>Privacy Policy</b></a></p></div></div>
+		</div>
+	</div>
+  
+  </body>
+  <script>
+	  initMap();
+  </script>
+</html>

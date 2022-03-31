@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <title>Fare Chaser Privacy Policy</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="title" content="Fare Chaser Privacy Policy" />
+	<meta name="description" content="Run a transportation business. A simple browser game that uses Google Maps." />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0gWLzB9UrPGEJMzOAeSAa1IbTmq1IlFs&libraries=places"></script>
+	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" type="image/png" href="favicon.png">
+	<link rel="manifest" href="manifest.json">
+  </head>
+
+  <body>
+	  <script>
+		  "use strict";
+		  let map;
+
+		  function initMap() {
+			  map = new google.maps.Map(document.getElementById("map"), {
+				  center: {
+					  lat: -23.452297,
+					  lng: 151.950487
+				  },
+				  zoom: 14,
+				  mapTypeId: 'satellite'
+			  });
+		  }
+	  </script>
+    <div id="map"></div>
+	
+	<div id="theSettings">
+		<div id="topFrame">
+			<h1>RIDESHARE GAME</h1><h2><a href="mailto:farechaser@gmail.com">Feedback</a></h2>
+		</div>
+		<div id="bottomFrame">
+			<form method="POST" action="index.html" target="_self">
+				<input type="submit" class="optionblock break" value="Go Back" />
+			</form>
+			<br/>
+			<h1>Privacy Policy</h1>
+			<div class="message">
+				<div style=\"margin:15px;\" class="smol">
+					<p>This notice applies to all information collected or submitted on the Fare Chaser website at <a href="http://farechaser.world">farechaser.world</a>.</p>
+					<p>We do not share information with any other outside parties.</p>
+					<p>We use return email addresses to answer the email inquiries that we receive. Such addresses are not used for any other purpose and are not shared with outside parties.</p>
+					<p>We may disclose information that you provide to our website when we believe that the disclosure is appropriate to comply with the law; or to protect the rights, property or safety of our website, our users or others.</p>
+					<p>To prevent unauthorized access, maintain data accuracy, and ensure the correct use of information, we have put in place appropriate physical, electronic, and managerial procedures to safeguard and secure the information we collect online.</p>
+					<p>Protecting the privacy of the very young is especially important. For that reason, we never collect or maintain information at our website from those we actually know are under 18, and no part of our website is structured to attract anyone under 18.</p>
+					<p>We reserve the right to revise, amend or modify this policy and other policies and agreements at any time and in any manner. Notice of any revision, amendment, or modification can be found within this privacy policy, and will only apply to information collected after any such change.</p>
+					<p>Should you have other questions or concerns about this privacy policy, please contact: <a href="mailto:farechaser@gmail.com">farechaser@gmail.com</a>.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+  </body>
+  <script>
+	  initMap();
+  </script>
+</html>

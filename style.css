@@ -1,0 +1,245 @@
+html,
+body {
+	font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+	font-size: 10pt;
+	margin: 0;
+	padding: 0;
+	background-color: #d3d3d3;
+}
+
+@media (min-width: 768px) {
+	.textmobile {
+		display: block;
+	}
+}
+@media (min-width: 992px) {
+	.textmobile {
+		display: none;
+	}
+}
+
+#map {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 360px;
+	right: 370px;
+	bottom: 0px;
+}
+
+#theSettings {
+	position: absolute;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
+	top: 0px;
+	bottom: 15px;
+	right: 0px;
+	width: 350px;
+	width: 360px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+h1 {
+	color: #000;
+	text-decoration: none;
+	font-size: 22pt;
+	letter-spacing: 2px;
+	font-weight: 200;
+	display: inline-block;
+	margin:0;
+}
+
+h2 {
+	font-size: 11pt;
+	vertical-align: -25%;
+	display: inline-block;
+	margin:0;
+}
+
+hr {
+	border: 0;
+	border-top: 1px solid gray;
+}
+
+a:link {
+	color: #3d6494; 
+}
+
+a:visited {
+	color: #3d6482;
+}
+
+a:active {
+	color: #3d64c8;
+}
+
+#topFrame {
+	position: fixed;
+	top: 0;
+	padding-top: 5px;
+	width: 370px;
+	background-color: #e0e0e0;
+	z-index: 10;
+}
+
+#bottomFrame {
+	width: 340px;
+	top: 60px;
+	position: relative;
+	padding-left:8px;
+}
+
+.slidecontainer {
+	width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+	-webkit-appearance: none;  /* Override default CSS styles */
+	appearance: none;
+	width: 75%; /* Full-width */
+	height: 25px; /* Specified height */
+	background: #bababa; /* Grey background */
+	outline: none; /* Remove outline */
+	opacity: 0.6; /* Set transparency (for mouse-over effects on hover) */
+	-webkit-transition: .2s; /* 0.2 seconds transition on hover */
+	transition: opacity .2s;
+	margin:5px 10% 20px 10%;
+	
+}
+
+/* Mouse-over effects */
+.slider:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none; /* Override default look */
+	appearance: none;
+	width: 25px; /* Set a specific slider handle width */
+	height: 25px; /* Slider handle height */
+	background: #000; 
+	cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+	width: 25px; /* Set a specific slider handle width */
+	height: 25px; /* Slider handle height */
+	background: #000; 
+	cursor: pointer; /* Cursor on hover */
+}
+
+.datatables {
+	border: 1px solid #000;
+	margin: 5px auto 15px auto;
+	width: 95%;
+}
+
+.shifty {
+	text-align:center;
+	font-size:90%;
+	width:50%;
+}
+
+.optionblock {
+	display:block;
+	border: 8px ridge #000;
+	padding:15px;
+	font-size:150%;
+	font-weight:bold;
+	margin:0 auto 0 auto;
+	border-radius:20px;
+}
+
+.accept {
+	color: #000;
+	background-color: #33cc33;
+}
+
+.decline {
+	color: #000;
+	background-color: #ff0000;
+}
+
+.smoke {
+	color: #f2b71f;
+	background-color: #de0d1b;
+}
+
+.break {
+	color: #000;
+	background-color: #3bd177;
+}
+
+.clean {
+	color: #0aeafa;
+	background-color: #8487cf;
+}
+
+.goonline {
+	color: #33cc33;
+	background-color: #1C6EA4;
+}
+
+.gooffline {
+	color: #000;
+	background-color: #FF8000;
+}
+
+input {
+	font-family: "Lucida Console", Monaco, monospace;
+}
+
+.paxtable {
+	font-size:80%;
+}
+
+.statschange {
+	font-family: "Courier New", Courier, monospace;
+	text-align:center;
+	font-size:110%;
+	font-variant:small-caps;
+}
+
+#clean1, #clean2, #clean3, #clean4, #clean5, #clean6, #clean7, #clean8, #clean9, #clean10, #stress1, #stress2, #stress3, #stress4, #stress5, #stress6, #stress7, #stress8, #stress9, #stress10, #hostile1, #hostile2, #hostile3, #hostile4, #hostile5, #hostile6, #hostile7, #hostile8, #hostile9, #hostile10 {
+	width: 10%;
+	height: 20px;
+}
+
+.cleanstress {
+	font-weight:bold;
+	text-align:center;
+	font-size:120%;
+}
+
+.smol {
+	font-size:85%;
+}
+
+.message {
+	border-radius: 15px;
+	border: 1px solid #000;
+	padding: 10px;
+	width: 80%;
+	margin: 10px auto 10px auto;
+}
+
+.message:first-child {
+	border: 2px solid #73AD21;
+	font-weight:bold;
+}
+
+#ninja { 
+	display:none;
+}
+
+.leadrow {
+	border-top: 1px solid #000;
+	margin:0;
+	padding:2px;
+	font-size:80%;
+}
