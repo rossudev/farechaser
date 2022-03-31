@@ -31,7 +31,7 @@ $decodetable = array_reverse( array_values( array_unique( $decodetable, SORT_REG
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="title" content="Fare Chaser Leaderboard" />
 	<meta name="description" content="Run a transportation business. A simple browser game that uses Google Maps." />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0gWLzB9UrPGEJMzOAeSAa1IbTmq1IlFs&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places"></script>
 	<link rel="stylesheet" href="style.css">
 	<link rel="shortcut icon" type="image/png" href="favicon.png">
 	<link rel="manifest" href="manifest.json">
