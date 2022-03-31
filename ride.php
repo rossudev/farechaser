@@ -945,7 +945,7 @@ if (isset($_POST["declineride"]) || isset($_POST["cancelride"]) || isset($_POST[
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="title" content="Fare Chaser" />
     <meta name="description" content="Run a transportation business. A simple browser game that uses Google Maps." />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH3HjD-8oLQlmJwJ61hNc7NzCTrl94QT4&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=places"></script>
     <script>
         "use strict";
 
